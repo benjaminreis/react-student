@@ -3,6 +3,7 @@ import axios from 'axios';
 //import { Link } from 'react-router-dom';
 import Dropdown from "./Dropdown";
 import "../App.css"
+import DatePicker from "react-datepicker";
 
 //import { Dropdown } from 'Dropdown';
 
@@ -32,6 +33,7 @@ export default class EditStudent extends Component {
             FirstName: '',
             LastName: '',
             SchoolName: '',
+            GraduationDate: '',
             Status: 'Select a Status',
             StatusOptions: [
                 {
@@ -65,13 +67,21 @@ export default class EditStudent extends Component {
             .then(response => {
                 let options = JSON.parse(JSON.stringify(this.state.StatusOptions));
                 options.forEach(item => item.selected = false);
-                options[response.data[0].Status].selected = true;
+                var StatusTitle;
+                if (response.data[0].Status !== 'undefined' && response.data[0].Status !== null) {
+                    options[response.data[0].Status].selected = true;
+                    StatusTitle = response.data[0].Status;
+                } else {
+                    StatusTitle = "Select a Status";
+                }
+
                 this.setState({
                     FirstName: response.data[0].FirstName,
                     LastName: response.data[0].LastName,
                     SchoolName: response.data[0].SchoolName,
                     StatusOptions: options,
-                    Status: options[response.data[0].Status].title
+                    Status: StatusTitle,
+                    GraduationDate: response.data[0].GraduationDate
                 })
 
             })
@@ -98,6 +108,12 @@ export default class EditStudent extends Component {
         });
     }
 
+    onChangeStudentGraduationDate(date) {
+        this.setState({
+            GraduationDate: date
+        });
+    }
+
     onSubmit(e) {
         e.preventDefault();
         const statusID = this.state.StatusOptions.filter(option => (option.selected === true))[0].id;
@@ -106,7 +122,8 @@ export default class EditStudent extends Component {
             LastName: this.state.LastName,
             SchoolName: this.state.SchoolName,
             ID: parseInt(this.props.match.params.id),
-            Status: statusID
+            Status: statusID,
+            GraduationDate: this.state.GraduationDate
         };
         console.log(obj);
         axios.put('http://localhost:8080/api/Students/' + this.props.match.params.id, obj)
@@ -148,7 +165,16 @@ export default class EditStudent extends Component {
                             onChange={this.onChangeStudentSchool}
                         />
                     </div>
-
+                    <div className="form-group">
+                        <label>Graduation Date: </label>
+                        <div className="grad-date">
+                            <DatePicker
+                                className="form-control"
+                                selected={this.state.GraduationDate}
+                                onChange={this.onChangeStudentGraduationDate}
+                            />
+                        </div>
+                    </div>
                     <div className="form-group">
                         <label>Status: </label>
                         <div className="input-box">

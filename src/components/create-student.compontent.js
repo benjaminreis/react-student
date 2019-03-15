@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 //import { Dropdown } from 'reactjs-dropdown-component';
 import Dropdown from "./Dropdown";
 
-//import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "../App.css"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -31,7 +31,7 @@ export default class CreateStudent extends Component {
             LastName: '',
             SchoolName: '',
             GraduationDate: new Date(),
-            Status: 1,
+            Status: 'Select a Status',
             StatusOptions : [
                 {
                     id: 0,
@@ -53,7 +53,8 @@ export default class CreateStudent extends Component {
         options.forEach(item => item.selected = false);
         options[id].selected = true;
         this.setState({
-            StatusOptions: options
+            StatusOptions: options,
+            Status: options[id].title
         });
     }
 
@@ -83,13 +84,15 @@ export default class CreateStudent extends Component {
 
     onSubmit(e) {
         e.preventDefault();
+        const statusID = this.state.StatusOptions.filter(option => (option.selected === true))[0].id;
 
         const newStudent = {
             FirstName: this.state.FirstName,
             LastName: this.state.LastName,
             SchoolName: this.state.SchoolName,
             GraduationDate: this.state.GraduationDate,
-            Status: this.state.Status
+            Status: this.state.Status,
+            Status: statusID
         };
 
         Axios.post('http://localhost:8080/api/Students/', newStudent).then(res => console.log(res.data));
@@ -151,7 +154,7 @@ export default class CreateStudent extends Component {
                         <div className="input-box">
                             <Dropdown
                                 className ="form-control status-dropdown"
-                                title="Select status"
+                                title={this.state.Status}
                                 list={this.state.StatusOptions}
                                 resetThenSet={this.resetThenSet}
                             />
