@@ -94,8 +94,9 @@ export default class CreateStudent extends Component {
             Status: this.state.Status,
             Status: statusID
         };
-
-        Axios.post('http://localhost:8080/api/Students/', newStudent).then(res => console.log(res.data));
+        var URL = 'http://localhost:8080/api/Students/';
+        //var URL = 'http://localhost:5000/Students';
+        Axios.post(URL, newStudent).then(res => console.log(res.data));
 
         this.setState({
             FirstName: '',

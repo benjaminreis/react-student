@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './Pagination';
 import "bootstrap/dist/css/bootstrap.min.css";
-
+require('dotenv').config();
 // const Student = props => (
 //     <tr>
 //         <td>{props.student.FirstName}</td>
@@ -41,7 +41,10 @@ export default class StudentsList extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/api/Students/')
+
+        var URL = 'http://localhost:8080/api/Students/';
+        //var URL = 'http://localhost:5000/Students';
+        axios.get(URL)
             .then(response => {
                 this.setState({ students: response.data });
             })

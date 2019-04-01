@@ -63,14 +63,16 @@ export default class EditStudent extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/api/Students/' + this.props.match.params.id)
+        var URL = 'http://localhost:8080/api/Students/';
+        //var URL = 'http://localhost:5000/Students/';
+        axios.get(URL + this.props.match.params.id)
             .then(response => {
                 let options = JSON.parse(JSON.stringify(this.state.StatusOptions));
                 options.forEach(item => item.selected = false);
                 var StatusTitle;
                 if (response.data[0].Status !== 'undefined' && response.data[0].Status !== null) {
                     options[response.data[0].Status].selected = true;
-                    StatusTitle = response.data[0].Status;
+                    StatusTitle = ((1 === response.data[0].Status) ? 'ACTIVE' : 'INACTIVE');
                 } else {
                     StatusTitle = "Select a Status";
                 }
@@ -126,7 +128,9 @@ export default class EditStudent extends Component {
             GraduationDate: this.state.GraduationDate
         };
         console.log(obj);
-        axios.put('http://localhost:8080/api/Students/' + this.props.match.params.id, obj)
+        var URL = 'http://localhost:8080/api/Students/';
+        //var URL = 'http://localhost:5000/Students/';
+        axios.put(URL + obj.ID, obj)
             .then(res => console.log(res.data));
 
         this.props.history.push('/');
