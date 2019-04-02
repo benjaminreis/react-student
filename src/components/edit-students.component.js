@@ -134,7 +134,7 @@ export default class EditStudent extends Component {
             .then(res => console.log(res.data));
 
         this.props.history.push('/');
-
+        window.location.reload();    
     }
 
     render() {
